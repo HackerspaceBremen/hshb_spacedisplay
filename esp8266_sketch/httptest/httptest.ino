@@ -5,11 +5,11 @@
 
 
 
-#include "DHT.h"
+//#include "DHT.h"
 
-#define DHTPIN 4
-#define DHTTYPE DHT11 
-DHT dht(DHTPIN, DHTTYPE);
+//#define DHTPIN 4
+//#define DHTTYPE DHT11 
+//DHT dht(DHTPIN, DHTTYPE);
 
 #include <ESP8266WiFi.h>
 #include <HttpClient.h>
@@ -18,7 +18,7 @@ DHT dht(DHTPIN, DHTTYPE);
 
 
 const char* ssid     = "Hackerspace";
-const char* password = "makehackmodify";
+const char* password = "";
 
 // Name of the server we want to connect to
 const char kHostname[] = "95.142.75.220";
@@ -33,15 +33,16 @@ const int kNetworkDelay = 1000;
 //const char *spacestatus;
 
 
+
 void setup() {
   Wire.pins(12,13);
   Wire.begin();
   
   pinMode(5,OUTPUT);
-  digitalWrite(5,HIGH);
+  digitalWrite(5,LOW);
   Serial.begin(9600);
   //Serial1.begin(9600);
-  dht.begin();
+  //dht.begin();
   delay(10);
   
   // We start by connecting to a WiFi network
@@ -59,7 +60,7 @@ void setup() {
   }
 
   Serial.println("");
-  Serial.println("WiFi connected");  
+  Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
@@ -69,14 +70,14 @@ void setup() {
   //delay(10000);
   
 }
-
+int spaceState=0;
 int value = 0;
 int err =0;
 char *responseBuffer_c;
 void loop() {
   WiFiClient client;
   HttpClient http(client);
-  delay(10000);
+  delay(1000);
   //++value;
 
   Serial.print("connecting to ");
@@ -138,15 +139,15 @@ void loop() {
         }
         //Serial.println(responseBuffer);
             if(responseBuffer.charAt(0)=='1'){
-              digitalWrite(5,LOW);
+              digitalWrite(5,HIGH);
               
               //Wire.write("D1");
               
               
               delay(1000);
-              Wire.beginTransmission(4);
-              Wire.write("W\t0\t0\tSpace opened!   ");
-              Wire.endTransmission();
+              
+              //Wire.write("Space opened!   \n");
+              //Wire.endTransmission();
               /*
               if (responseBuffer.length()>18){
                 int pages=ceil((responseBuffer.length()-2)/16);
@@ -158,28 +159,39 @@ void loop() {
               }else{
               */
               if (responseBuffer.length()>2){
-                Wire.beginTransmission(4);
-                Wire.write("W\t0\t1\t");
-                responseBuffer.substring(2,18).toCharArray(screenbuffer,16);
+                Wire.beginTransmission(8);
+                Wire.write(0x02);
+                responseBuffer.substring(2,responseBuffer.length()).toCharArray(screenbuffer,responseBuffer.length());
                 Wire.write(screenbuffer);
                 Wire.endTransmission();
               }
+              spaceState=2;
             }else if(responseBuffer.charAt(0)=='0'){
-              digitalWrite(5,HIGH);
+              //digitalWrite(5,LOW);
               //Serial1.println("\nD1");
+              //Wire.beginTransmission(4);
+              //Wire.write(0x02);
+              //Wire.write("Space closed!");
               //delay(1000);
               //Serial1.println("W\t0\t0\tSpace closed!   ");
               //Serial1.println("W\t0\t1\t                ");
+              spaceState=1;
             }else{
-              digitalWrite(5,LOW);
+              digitalWrite(5,HIGH);
               delay(1000);
-              Wire.beginTransmission(4);
-              Wire.write("W\t0\t0\tSpaceAPI Error!!");
+              Wire.beginTransmission(8);
+              Wire.write(0x01);
               Wire.endTransmission();
-              delay(1);
-              Wire.beginTransmission(4);
-              Wire.write("W\t0\t1\tScript broken!  ");
+              delay(1000);
+              Wire.beginTransmission(8);
+              Wire.write(0x10);
+              Wire.write("SpaceAPI Error!!");
               Wire.endTransmission();
+              Wire.beginTransmission(8);
+              Wire.write(0x11);
+              Wire.write("Script broken!  ");
+              Wire.endTransmission();
+              spaceState=0;
             }       
         
       }
@@ -193,15 +205,22 @@ void loop() {
     {    
       //Serial.print("Getting response failed: ");
       //Serial.println(err);
-      Serial1.println("D1");
-      delay(100);
-      Wire.beginTransmission(4);
-      Wire.write("W\t0\t0\tSpaceAPI Error!!");
+      //Serial1.println("D1");
+      digitalWrite(5,HIGH);
+      delay(1000);
+      Wire.beginTransmission(8);
+      Wire.write(0x01);
       Wire.endTransmission();
-      delay(1);
-      Wire.beginTransmission(4);
-      Wire.write("W\t0\t1\tHTTP error !!   ");
+      delay(1000);
+      Wire.beginTransmission(8);
+      Wire.write(0x10);
+      Wire.write("SpaceAPI Error!!");
       Wire.endTransmission();
+      Wire.beginTransmission(8);
+      Wire.write(0x11);
+      Wire.write("HTTP error !!   ");
+      Wire.endTransmission();
+      spaceState=0;
       //Serial1.print("W\t0\t1\tHTTP ");
       //Serial1.println(err,DEC);
     }
@@ -268,13 +287,21 @@ void loop() {
         }
         //Serial.println(responseBuffer);
         //Serial1.println("W\t0\t0\t                ");
-        Wire.beginTransmission(4);
-        Wire.write("W\t0\t0\t");
+        Wire.beginTransmission(8);
+        Wire.write(0x02);
+        Wire.write("");
+        if(spaceState==0){
+          Wire.write("State unknown!  ");
+        }else if(spaceState==1){
+          Wire.write("Space closed!   ");
+        }else if(spaceState==1){
+          Wire.write("Space opened!   ");
+        }
         responseBuffer.substring(2,18).toCharArray(screenbuffer,16);
         Wire.write(screenbuffer);
         Wire.endTransmission();
         //Serial1.println(responseBuffer);
-        float h = dht.readHumidity();
+        /*float h = dht.readHumidity();
         // Read temperature as Celsius (the default)
         float t = dht.readTemperature();
         if (isnan(h) || isnan(t)) {
@@ -292,7 +319,7 @@ void loop() {
         Wire.write("W\t0\t1\t");
         Wire.write(screenbuffer);
         Wire.endTransmission();
-        
+        */
         
       }
       else
@@ -305,15 +332,20 @@ void loop() {
     {    
       //Serial.print("Getting response failed: ");
       //Serial.println(err);
-      Serial1.println("D1");
+      //Serial1.println("D1");
+      Wire.beginTransmission(8);
+      Wire.write(0x01);
+      Wire.endTransmission();
       delay(100);
-      Wire.beginTransmission(4);
-      Wire.write("W\t0\t0\tSpaceAPI Error!!");
+      Wire.beginTransmission(8);
+      Wire.write(0x10);
+      Wire.write("SpaceAPI Error!!");
       Wire.endTransmission();
-      delay(1);
-      Wire.beginTransmission(4);
-      Wire.write("W\t0\t1\tHTTP error !!   ");
+      Wire.beginTransmission(8);
+      Wire.write(0x11);
+      Wire.write("HTTP error !!   ");
       Wire.endTransmission();
+      
     }
   }
   else

@@ -1,5 +1,5 @@
 
-
+#include <Wire.h>
 uint8_t displaymap[2][16][8] = {
   {
     {1, 0, 1, 1, 1, 1, 0, 1},
@@ -52,6 +52,8 @@ boolean stringComplete = false;  // whether the string is complete
 
 void setup() {
   // put your setup code here, to run once:
+  Wire.begin(8);
+  Wire.onReceive(receiveEvent);
   Serial.begin(9600);
   // reserve 200 bytes for the inputString:
   inputString.reserve(64);
@@ -75,9 +77,9 @@ void setup() {
   digitalWrite(A2,HIGH);
   pinMode(A3,OUTPUT);
   digitalWrite(A3,HIGH);
-  pinMode(A5,OUTPUT);
+  //pinMode(A5,OUTPUT);
   //digitalWrite(A5,HIGH);
-  digitalWrite(A5,LOW);
+  //digitalWrite(A5,LOW);
   delay(20);
   clear();
   /*for (uint8_t i= 0; i <16; i++){
@@ -89,32 +91,19 @@ void setup() {
 void loop()
 {
   
-  serialEvent();
+  //serialEvent();
   /*for (uint8_t i=0;i<4;i++){
     writeChar(0,0,teststring[i]);
     delay(1);
   }*/
-  
+  /*
   char buf[128];
   char *xpos, *ypos, *p, *payload;
   uint8_t x, y;
   
   inputString.toCharArray(buf,inputString.length());
   if (stringComplete) {
-    if(inputString.charAt(0)=='D'&&inputString.charAt(2)=='\n')
-    {
-      switch(inputString.charAt(1))
-      {
-        case '0':
-          digitalWrite(A5,HIGH);
-          break;
-        case '1':
-          digitalWrite(A5,LOW);
-          delay(20);
-          clear();
-          break;
-      }
-    }else if(inputString.charAt(0)=='W'){
+    if(inputString.charAt(0)=='W'){
       strtok_r(buf,"\t",&p);
       xpos = strtok_r(NULL,"\t",&p);
       x = atoi(xpos);
@@ -136,8 +125,8 @@ void loop()
     inputString = "";
     stringComplete = false;
   }
-  
-  
+  */
+  delay(50);
 }
 
 void writeChar(int x, int y,int chr)
@@ -227,6 +216,11 @@ void clear()
   digitalWrite(7,LOW); //datenbit loeschen
 }
 
+
+
+
+
+/*
 void serialEvent() {
   while (Serial.available()) {
     // get the new byte:
@@ -243,4 +237,110 @@ void serialEvent() {
     
   }
 }
+*/
+void receiveEvent(int howMany) {
+  uint8_t cmd=(uint8_t)Wire.read();
+  uint8_t inChar, i, addr;
+  switch (cmd){
+    case 0x01:
+      clear();
+      Serial.println("Display cleared!");
+    break;
+    case 0x02:
+      uint8_t x, y;
+      i=0;
+      x=0;
+      y=0;
+      inputString = "";
+      if (Wire.available()==32){
+        while (Wire.available()) {
+          inChar = (uint8_t)Wire.read();
+          /*
+          x= i % 16;
+          y= i / 16;
+          writeChar(x,y,inChar);
+          */
+          writeChar((i % 16),(i / 16),inChar);
+          if(i==16){
+            inputString += "\n";
+          }
+            inputString += inChar;
+          i++;
+        }
+        Serial.println("Display contents:");
+        Serial.println(inputString);
+        Serial.println("--End of Display--");
+      }
+    break;
+    
+    case 0x03:
+      addr=(uint8_t)Wire.read();
+      inChar = (uint8_t)Wire.read();
+      writeChar((addr % 16),(addr / 16),inChar);
+      Serial.println("Character changed :");
+      Serial.print("  Row: ");
+      Serial.println((addr / 16));
+      Serial.print("  Column: ");
+      Serial.println((addr % 16));
+      Serial.print("  New char: ");
+      Serial.println(inChar);
+    break;
 
+    case 0x10:
+      if (Wire.available()==16){
+        inputString = "";
+        i=0;
+        while (Wire.available()) {
+          inChar = (uint8_t)Wire.read();
+          /*
+          x= i % 16;
+          y= i / 16;
+          writeChar(x,y,inChar);
+          */
+          writeChar(i,0,inChar);
+          inputString += inChar;
+          i++;
+        }
+        Serial.println("Display line 0 contents:");
+        Serial.println(inputString);
+        Serial.println("--End of Display--");
+      }
+    break;
+    case 0x11:
+      if (Wire.available()==16){
+        inputString = "";
+        i=0;
+        while (Wire.available()) {
+          inChar = (uint8_t)Wire.read();
+          /*
+          x= i % 16;
+          y= i / 16;
+          writeChar(x,y,inChar);
+          */
+          writeChar(i,1,inChar);
+          inputString += inChar;
+          i++;
+        }
+        Serial.println("Display line 1 contents:");
+        Serial.println(inputString);
+        Serial.println("--End of Display--");
+      }
+    break;
+  }
+  /*
+  while (Wire.available()) {
+    // get the new byte:
+    char inChar = (char)Wire.read();
+    // add it to the inputString:
+    inputString += inChar;
+    // if the incoming character is a newline, set a flag
+    // so the main loop can do something about it:
+  }
+  stringComplete = true;
+  Serial.print("Received ");
+  Serial.print(howMany);
+  Serial.println(" bytes.");
+  Serial.print("Contents: ");
+  Serial.println(inputString);
+  */
+}
