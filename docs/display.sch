@@ -1,0 +1,488 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:display-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L 74LS139 U?
+U 1 1 57C67020
+P 3195 1815
+F 0 "U?" H 3195 1915 50  0000 C CNN
+F 1 "74LS139" H 3195 1715 50  0000 C CNN
+F 2 "" H 3195 1815 50  0000 C CNN
+F 3 "" H 3195 1815 50  0000 C CNN
+	1    3195 1815
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS139 U?
+U 2 1 57C67102
+P 3195 2705
+F 0 "U?" H 3195 2805 50  0000 C CNN
+F 1 "74LS139" H 3195 2605 50  0000 C CNN
+F 2 "" H 3195 2705 50  0000 C CNN
+F 3 "" H 3195 2705 50  0000 C CNN
+	2    3195 2705
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS139 U?
+U 1 1 57C67A1F
+P 3195 3600
+F 0 "U?" H 3195 3700 50  0000 C CNN
+F 1 "74LS139" H 3195 3500 50  0000 C CNN
+F 2 "" H 3195 3600 50  0000 C CNN
+F 3 "" H 3195 3600 50  0000 C CNN
+	1    3195 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS139 U?
+U 2 1 57C67A25
+P 3195 4490
+F 0 "U?" H 3195 4590 50  0000 C CNN
+F 1 "74LS139" H 3195 4390 50  0000 C CNN
+F 2 "" H 3195 4490 50  0000 C CNN
+F 3 "" H 3195 4490 50  0000 C CNN
+	2    3195 4490
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS139 U?
+U 1 1 57C681A2
+P 8455 1815
+F 0 "U?" H 8455 1915 50  0000 C CNN
+F 1 "74LS139" H 8455 1715 50  0000 C CNN
+F 2 "" H 8455 1815 50  0000 C CNN
+F 3 "" H 8455 1815 50  0000 C CNN
+	1    8455 1815
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS139 U?
+U 2 1 57C681A8
+P 8455 2705
+F 0 "U?" H 8455 2805 50  0000 C CNN
+F 1 "74LS139" H 8455 2605 50  0000 C CNN
+F 2 "" H 8455 2705 50  0000 C CNN
+F 3 "" H 8455 2705 50  0000 C CNN
+	2    8455 2705
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS139 U?
+U 1 1 57C681AE
+P 8455 3600
+F 0 "U?" H 8455 3700 50  0000 C CNN
+F 1 "74LS139" H 8455 3500 50  0000 C CNN
+F 2 "" H 8455 3600 50  0000 C CNN
+F 3 "" H 8455 3600 50  0000 C CNN
+	1    8455 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS139 U?
+U 2 1 57C681B4
+P 8455 4490
+F 0 "U?" H 8455 4590 50  0000 C CNN
+F 1 "74LS139" H 8455 4390 50  0000 C CNN
+F 2 "" H 8455 4490 50  0000 C CNN
+F 3 "" H 8455 4490 50  0000 C CNN
+	2    8455 4490
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS00 U?
+U 3 1 57C68272
+P 1610 2065
+F 0 "U?" H 1610 2115 50  0000 C CNN
+F 1 "74LS00" H 1610 1965 50  0000 C CNN
+F 2 "" H 1610 2065 50  0000 C CNN
+F 3 "" H 1610 2065 50  0000 C CNN
+	3    1610 2065
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS00 U?
+U 2 1 57C682DB
+P 1610 2955
+F 0 "U?" H 1610 3005 50  0000 C CNN
+F 1 "74LS00" H 1610 2855 50  0000 C CNN
+F 2 "" H 1610 2955 50  0000 C CNN
+F 3 "" H 1610 2955 50  0000 C CNN
+	2    1610 2955
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS00 U?
+U 4 1 57C68510
+P 1610 3850
+F 0 "U?" H 1610 3900 50  0000 C CNN
+F 1 "74LS00" H 1610 3750 50  0000 C CNN
+F 2 "" H 1610 3850 50  0000 C CNN
+F 3 "" H 1610 3850 50  0000 C CNN
+	4    1610 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS00 U?
+U 1 1 57C686DE
+P 1610 4740
+F 0 "U?" H 1610 4790 50  0000 C CNN
+F 1 "74LS00" H 1610 4640 50  0000 C CNN
+F 2 "" H 1610 4740 50  0000 C CNN
+F 3 "" H 1610 4740 50  0000 C CNN
+	1    1610 4740
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS00 U?
+U 3 1 57C693B6
+P 6860 2065
+F 0 "U?" H 6860 2115 50  0000 C CNN
+F 1 "74LS00" H 6860 1965 50  0000 C CNN
+F 2 "" H 6860 2065 50  0000 C CNN
+F 3 "" H 6860 2065 50  0000 C CNN
+	3    6860 2065
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS00 U?
+U 2 1 57C693BC
+P 6860 2955
+F 0 "U?" H 6860 3005 50  0000 C CNN
+F 1 "74LS00" H 6860 2855 50  0000 C CNN
+F 2 "" H 6860 2955 50  0000 C CNN
+F 3 "" H 6860 2955 50  0000 C CNN
+	2    6860 2955
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS00 U?
+U 4 1 57C693C2
+P 6860 3850
+F 0 "U?" H 6860 3900 50  0000 C CNN
+F 1 "74LS00" H 6860 3750 50  0000 C CNN
+F 2 "" H 6860 3850 50  0000 C CNN
+F 3 "" H 6860 3850 50  0000 C CNN
+	4    6860 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS00 U?
+U 1 1 57C693C8
+P 6860 4740
+F 0 "U?" H 6860 4790 50  0000 C CNN
+F 1 "74LS00" H 6860 4640 50  0000 C CNN
+F 2 "" H 6860 4740 50  0000 C CNN
+F 3 "" H 6860 4740 50  0000 C CNN
+	1    6860 4740
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS240 U?
+U 1 1 57C69695
+P 3280 5685
+F 0 "U?" H 3330 5485 50  0000 C CNN
+F 1 "74LS240" H 3380 5285 50  0000 C CNN
+F 2 "" H 3280 5685 50  0000 C CNN
+F 3 "" H 3280 5685 50  0000 C CNN
+	1    3280 5685
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74LS245 U?
+U 1 1 57C69784
+P 3290 6915
+F 0 "U?" H 3390 7490 50  0000 L BNN
+F 1 "74LS245" H 3340 6340 50  0000 L TNN
+F 2 "" H 3290 6915 50  0000 C CNN
+F 3 "" H 3290 6915 50  0000 C CNN
+	1    3290 6915
+	1    0    0    -1  
+$EndComp
+Text Label 2345 4240 2    60   ~ 0
+A1
+Text Label 2345 4390 2    60   ~ 0
+A0
+Text Label 2345 3350 2    60   ~ 0
+A1
+Text Label 2345 3500 2    60   ~ 0
+A0
+Text Label 2345 2455 2    60   ~ 0
+A1
+Text Label 2345 2605 2    60   ~ 0
+A0
+Text Label 2345 1565 2    60   ~ 0
+A1
+Text Label 2345 1715 2    60   ~ 0
+A0
+Text Label 7605 4240 2    60   ~ 0
+A1
+Text Label 7605 4390 2    60   ~ 0
+A0
+Text Label 7605 3350 2    60   ~ 0
+A1
+Text Label 7605 3500 2    60   ~ 0
+A0
+Text Label 7605 2455 2    60   ~ 0
+A1
+Text Label 7605 2605 2    60   ~ 0
+A0
+Text Label 7605 1565 2    60   ~ 0
+A1
+Text Label 7605 1715 2    60   ~ 0
+A0
+Text Label 4100 5585 2    60   ~ 0
+A1
+Text Label 4100 5685 2    60   ~ 0
+A0
+$Comp
+L CONN_02X09 P?
+U 1 1 57C6A402
+P 1415 6390
+F 0 "P?" H 1415 6890 50  0000 C CNN
+F 1 "CONN_02X09" V 1415 6390 50  0000 C CNN
+F 2 "" H 1415 5190 50  0000 C CNN
+F 3 "" H 1415 5190 50  0000 C CNN
+	1    1415 6390
+	1    0    0    -1  
+$EndComp
+Text Label 1165 5990 2    60   ~ 0
+D0
+Text Label 1165 6090 2    60   ~ 0
+D2
+Text Label 1165 6190 2    60   ~ 0
+D4
+Text Label 1165 6290 2    60   ~ 0
+D6
+Text Label 1665 5990 0    60   ~ 0
+D1
+Text Label 1665 6090 0    60   ~ 0
+D3
+Text Label 1665 6190 0    60   ~ 0
+D5
+Text Label 1665 6290 0    60   ~ 0
+~WRITE
+Text Label 2590 6415 2    60   ~ 0
+D0
+Text Label 2590 6515 2    60   ~ 0
+D1
+Text Label 2590 6615 2    60   ~ 0
+D2
+Text Label 2590 6715 2    60   ~ 0
+D3
+Text Label 2590 6815 2    60   ~ 0
+D4
+Text Label 2590 6915 2    60   ~ 0
+D5
+Text Label 2590 7015 2    60   ~ 0
+D6
+Text Label 2590 7115 2    60   ~ 0
+~WRITE
+Text Label 2580 5585 2    60   ~ 0
+A1_IN
+Text Label 2580 5685 2    60   ~ 0
+A0_IN
+Text Label 1165 6590 2    60   ~ 0
+A1_IN
+Text Label 1665 6790 0    60   ~ 0
+A0_IN
+Wire Wire Line
+	4100 5685 3980 5685
+Wire Wire Line
+	3980 5585 4100 5585
+Wire Wire Line
+	2210 4740 2345 4740
+Wire Wire Line
+	2210 3850 2345 3850
+Wire Wire Line
+	2210 2955 2345 2955
+Wire Wire Line
+	2210 2065 2345 2065
+Wire Wire Line
+	7460 2065 7605 2065
+Wire Wire Line
+	7460 2955 7605 2955
+Wire Wire Line
+	7460 3850 7605 3850
+Wire Wire Line
+	7460 4740 7605 4740
+Wire Wire Line
+	1010 1965 920  1965
+Wire Wire Line
+	920  1965 920  2855
+Wire Wire Line
+	920  2855 1010 2855
+Wire Wire Line
+	1010 3750 920  3750
+Wire Wire Line
+	920  3750 920  4640
+Wire Wire Line
+	920  4640 1010 4640
+Wire Wire Line
+	1010 2165 820  2165
+Wire Wire Line
+	820  2165 820  3950
+Wire Wire Line
+	820  3950 1010 3950
+Wire Wire Line
+	1010 4840 705  4840
+Wire Wire Line
+	705  4840 705  3055
+Wire Wire Line
+	705  3055 1010 3055
+Wire Wire Line
+	6260 1965 6170 1965
+Wire Wire Line
+	6170 1965 6170 2855
+Wire Wire Line
+	6170 2855 6260 2855
+Wire Wire Line
+	6260 3750 6170 3750
+Wire Wire Line
+	6170 3750 6170 4640
+Wire Wire Line
+	6170 4640 6260 4640
+Wire Wire Line
+	6260 2165 6070 2165
+Wire Wire Line
+	6070 2165 6070 3950
+Wire Wire Line
+	6070 3950 6260 3950
+Wire Wire Line
+	6260 4840 5955 4840
+Wire Wire Line
+	5955 4840 5955 3055
+Wire Wire Line
+	5955 3055 6260 3055
+Text Label 920  2420 3    60   ~ 0
+NAND_A
+Text Label 920  4120 3    60   ~ 0
+NAND_B
+Text Label 820  3470 1    60   ~ 0
+NAND_C
+Text Label 705  3875 1    60   ~ 0
+NAND_D
+Text Label 5955 3965 1    60   ~ 0
+NAND_D
+Text Label 6070 3450 1    60   ~ 0
+NAND_C
+Text Label 6170 2590 1    60   ~ 0
+NAND_E
+Text Label 6170 4365 1    60   ~ 0
+NAND_F
+Text Label 3980 5185 0    60   ~ 0
+NAND_E
+Text Label 3980 5285 0    60   ~ 0
+NAND_F
+Text Label 3980 5385 0    60   ~ 0
+NAND_C
+Text Label 3980 5485 0    60   ~ 0
+NAND_B
+Text Label 3980 5785 0    60   ~ 0
+NAND_D
+Text Label 3980 5885 0    60   ~ 0
+NAND_A
+Text Label 2580 5185 2    60   ~ 0
+NAND_E_IN
+Text Label 1165 6690 2    60   ~ 0
+NAND_E_IN
+Text Label 2580 5285 2    60   ~ 0
+NAND_F_IN
+Text Label 1665 6690 0    60   ~ 0
+NAND_F_IN
+Text Label 2580 5385 2    60   ~ 0
+NAND_C_IN
+Text Label 1165 6490 2    60   ~ 0
+NAND_C_IN
+Text Label 2580 5485 2    60   ~ 0
+NAND_B_IN
+Text Label 1665 6490 0    60   ~ 0
+NAND_B_IN
+Text Label 2580 5785 2    60   ~ 0
+NAND_D_IN
+Text Label 1165 6790 2    60   ~ 0
+NAND_D_IN
+Text Label 2580 5885 2    60   ~ 0
+NAND_A_IN
+Text Label 1665 6590 0    60   ~ 0
+NAND_A_IN
+$Comp
+L GND #PWR?
+U 1 1 57C68464
+P 2535 6185
+F 0 "#PWR?" H 2535 5935 50  0001 C CNN
+F 1 "GND" H 2535 6035 50  0000 C CNN
+F 2 "" H 2535 6185 50  0000 C CNN
+F 3 "" H 2535 6185 50  0000 C CNN
+	1    2535 6185
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2535 6185 2580 6185
+Wire Wire Line
+	2580 6185 2580 6085
+$Comp
+L GND #PWR?
+U 1 1 57C685EF
+P 2590 7415
+F 0 "#PWR?" H 2590 7165 50  0001 C CNN
+F 1 "GND" H 2590 7265 50  0000 C CNN
+F 2 "" H 2590 7415 50  0000 C CNN
+F 3 "" H 2590 7415 50  0000 C CNN
+	1    2590 7415
+	1    0    0    -1  
+$EndComp
+$Comp
+L +5V #PWR?
+U 1 1 57C68681
+P 2590 7315
+F 0 "#PWR?" H 2590 7165 50  0001 C CNN
+F 1 "+5V" H 2590 7455 50  0000 C CNN
+F 2 "" H 2590 7315 50  0000 C CNN
+F 3 "" H 2590 7315 50  0000 C CNN
+	1    2590 7315
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
