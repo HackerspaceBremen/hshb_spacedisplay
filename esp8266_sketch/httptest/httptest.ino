@@ -1,21 +1,13 @@
-#include <Wire.h>
 
-
-
-
-
-
-//#include "DHT.h"
-
-//#define DHTPIN 4
-//#define DHTTYPE DHT11 
-//DHT dht(DHTPIN, DHTTYPE);
-
+#include <Shifty.h>
 #include <ESP8266WiFi.h>
-#include <HttpClient.h>
+#include <ESP8266WiFiMulti.h>
 
+#include <ESP8266HTTPClient.h>
+#include <ArduinoJson.h>
 
-
+ESP8266WiFiMulti WiFiMulti;
+Shifty shift; 
 
 const char* ssid     = "Hackerspace";
 const char* password = "";
@@ -29,17 +21,20 @@ const char kPath[] = "/index.php";
 const int kNetworkTimeout = 30*1000;
 // Number of milliseconds to wait if no data is available before trying again
 const int kNetworkDelay = 1000;
-//StaticJsonBuffer<8192> jsonBuffer;
-//const char *spacestatus;
+
+void writeString(uint8_t,uint8_t,const char[],uint8_t);
+
 
 
 
 void setup() {
-  Wire.pins(12,13);
-  Wire.begin();
+  shift.setBitCount(16);
+  shift.setPins(16,5,4);
   
-  pinMode(5,OUTPUT);
-  digitalWrite(5,LOW);
+  
+  
+  //pinMode(5,OUTPUT);
+  //digitalWrite(5,LOW);
   Serial.begin(9600);
   //Serial1.begin(9600);
   //dht.begin();
@@ -51,10 +46,11 @@ void setup() {
   //Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
+  WiFi.mode(WIFI_STA); 
   
-  WiFi.begin(ssid, password);
+  WiFiMulti.addAP(ssid, password);
   
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFiMulti.run()  != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
@@ -63,8 +59,7 @@ void setup() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-
-  Serial.println();
+  
   delay(5000);
   //Serial1.println("D1");
   //delay(10000);
@@ -73,10 +68,10 @@ void setup() {
 int spaceState=0;
 int value = 0;
 int err =0;
-char *responseBuffer_c;
+
 void loop() {
-  WiFiClient client;
-  HttpClient http(client);
+  
+  HTTPClient http;
   delay(1000);
   //++value;
 
@@ -84,145 +79,42 @@ void loop() {
   Serial.println(kHostname);
   
 
-  
-  err = http.get(kHostname, 8080, "/index.php?field=status");
-  if (err == 0)
+  http.begin("http://hackerspacehb.appspot.com/v2/status");
+  //err = http.get(kHostname, 8080, "/index.php?field=status");
+  err = http.GET();
+  if (err > 0)
   {
     Serial.println("started spaceRequest ok");
-
-    err = http.responseStatusCode();
-    if (err  < 300&& err >=200)
+    Serial.print("Got status code: ");
+    Serial.println(err);
+    
+    if (err  == HTTP_CODE_OK)
     {
-      Serial.print("Got status code: ");
-      Serial.println(err);
-
-      // Usually you'd check that the response code is 200 or a
-      // similar "success" code (200-299) before carrying on,
-      // but we'll print out whatever response we get
-
-      err = http.skipResponseHeaders();
-      if (err >= 0)
-      {
-        int bodyLen = http.contentLength();
-        Serial.print("Content length is: ");
-        Serial.println(bodyLen);
-        Serial.println();
-        //Serial.println("Body returned follows:");
-      
-        // Now we've got to the body, so we can print it out
-        unsigned long timeoutStart = millis();
-        char c;
-        String responseBuffer="";
-        char screenbuffer[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        // Whilst we haven't timed out & haven't reached the end of the body
-        while ( (http.connected() || http.available()) &&
-               ((millis() - timeoutStart) < kNetworkTimeout) )
-        {
-            if (http.available())
-            {
-                c = http.read();
-                // Print out this character
-                //Serial.print(c);
-                responseBuffer += c;
-                bodyLen--;
-                // We read something, reset the timeout counter
-                timeoutStart = millis();
-            }
-            else
-            {
-                // We haven't got any data, so let's pause to allow some to
-                // arrive
-                delay(kNetworkDelay);
-            }
-            
-              
+      int bodyLen = http.getSize();
+      Serial.print("Content length is: ");
+      Serial.println(bodyLen);
+      Serial.println();
+      //Serial.println("Body returned follows:");
+    
+      // Now we've got to the body, so we can print it out
+      unsigned long timeoutStart = millis();
+      char c;
+      std::unique_ptr<char[]> responseBuffer(new char[bodyLen]);
+      String payload=http.getString();
+      payload.toCharArray(responseBuffer.get(),bodyLen);
+      StaticJsonBuffer<8192> jsonBuffer;
+      JsonObject& json = jsonBuffer.parseObject(responseBuffer.get());
+      if (!json.success()) {
+        Serial.println("Failed to parse SpaceAPI JSON!");
+      }else{
+        if(json["open"]==true){
+          writeString(1,1,"Space open!     ",16);
+          writeString(1,2,json["status"],constrain(strlen(json["status"]),0,16));
+        }else if(json["open"]==false){
+          writeString(1,1,"Space closed!   ",16);
+          writeString(1,2,json["status"],constrain(strlen(json["status"]),0,16));
         }
-        //Serial.println(responseBuffer);
-            if(responseBuffer.charAt(0)=='1'){
-              digitalWrite(5,HIGH);
-              
-              //Wire.write("D1");
-              
-              
-              delay(1000);
-              
-              //Wire.write("Space opened!   \n");
-              //Wire.endTransmission();
-              /*
-              if (responseBuffer.length()>18){
-                int pages=ceil((responseBuffer.length()-2)/16);
-                for (int i = 1 ; i <= pages ; i++){
-                  Serial1.print("W\t0\t1\t");
-                  Serial1.println(responseBuffer.substring(2*pages,18*pages));
-                  delay(5000);
-                }
-              }else{
-              */
-              if (responseBuffer.length()>2){
-                Wire.beginTransmission(8);
-                Wire.write(0x02);
-                responseBuffer.substring(2,responseBuffer.length()).toCharArray(screenbuffer,responseBuffer.length());
-                Wire.write(screenbuffer);
-                Wire.endTransmission();
-              }
-              spaceState=2;
-            }else if(responseBuffer.charAt(0)=='0'){
-              //digitalWrite(5,LOW);
-              //Serial1.println("\nD1");
-              //Wire.beginTransmission(4);
-              //Wire.write(0x02);
-              //Wire.write("Space closed!");
-              //delay(1000);
-              //Serial1.println("W\t0\t0\tSpace closed!   ");
-              //Serial1.println("W\t0\t1\t                ");
-              spaceState=1;
-            }else{
-              digitalWrite(5,HIGH);
-              delay(1000);
-              Wire.beginTransmission(8);
-              Wire.write(0x01);
-              Wire.endTransmission();
-              delay(1000);
-              Wire.beginTransmission(8);
-              Wire.write(0x10);
-              Wire.write("SpaceAPI Error!!");
-              Wire.endTransmission();
-              Wire.beginTransmission(8);
-              Wire.write(0x11);
-              Wire.write("Script broken!  ");
-              Wire.endTransmission();
-              spaceState=0;
-            }       
-        
-      }
-      else
-      {
-        //Serial.print("Failed to skip response headers: ");
-        //Serial.println(err);
-      }
-    }
-    else
-    {    
-      //Serial.print("Getting response failed: ");
-      //Serial.println(err);
-      //Serial1.println("D1");
-      digitalWrite(5,HIGH);
-      delay(1000);
-      Wire.beginTransmission(8);
-      Wire.write(0x01);
-      Wire.endTransmission();
-      delay(1000);
-      Wire.beginTransmission(8);
-      Wire.write(0x10);
-      Wire.write("SpaceAPI Error!!");
-      Wire.endTransmission();
-      Wire.beginTransmission(8);
-      Wire.write(0x11);
-      Wire.write("HTTP error !!   ");
-      Wire.endTransmission();
-      spaceState=0;
-      //Serial1.print("W\t0\t1\tHTTP ");
-      //Serial1.println(err,DEC);
+      }   
     }
   }
   else
@@ -230,122 +122,25 @@ void loop() {
     Serial.print("Connect failed: ");
     Serial.println(err);
   }
-  http.stop();
+  http.end();
   
   delay(10000);
-  err = http.get(kHostname, 8080, "/index.php?field=time");
-  if (err == 0)
-  {
+  
+  
+  http.begin(kHostname, 8080, "/index.php?field=time");
+  err = http.GET();
+  if (err>0){
     Serial.println("started timeRequest ok");
-
-    err = http.responseStatusCode();
-    if (err  < 300&& err >=200)
-    {
-      Serial.print("Got status code: ");
-      Serial.println(err);
-
-      // Usually you'd check that the response code is 200 or a
-      // similar "success" code (200-299) before carrying on,
-      // but we'll print out whatever response we get
-
-      err = http.skipResponseHeaders();
-      if (err >= 0)
-      {
-        int bodyLen = http.contentLength();
-        Serial.print("Content length is: ");
-        Serial.println(bodyLen);
-        Serial.println();
-        //Serial.println("Body returned follows:");
-      
-        // Now we've got to the body, so we can print it out
-        unsigned long timeoutStart = millis();
-        char c;
-        String responseBuffer="";
-        char screenbuffer[16]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        // Whilst we haven't timed out & haven't reached the end of the body
-        while ( (http.connected() || http.available()) &&
-               ((millis() - timeoutStart) < kNetworkTimeout) )
-        {
-            if (http.available())
-            {
-                c = http.read();
-                // Print out this character
-                //Serial.print(c);
-                responseBuffer += c;
-                bodyLen--;
-                // We read something, reset the timeout counter
-                timeoutStart = millis();
-            }
-            else
-            {
-                // We haven't got any data, so let's pause to allow some to
-                // arrive
-                delay(kNetworkDelay);
-            }
-              
-              
-        }
-        //Serial.println(responseBuffer);
-        //Serial1.println("W\t0\t0\t                ");
-        Wire.beginTransmission(8);
-        Wire.write(0x02);
-        Wire.write("");
-        if(spaceState==0){
-          Wire.write("State unknown!  ");
-        }else if(spaceState==1){
-          Wire.write("Space closed!   ");
-        }else if(spaceState==1){
-          Wire.write("Space opened!   ");
-        }
-        responseBuffer.substring(2,18).toCharArray(screenbuffer,16);
-        Wire.write(screenbuffer);
-        Wire.endTransmission();
-        //Serial1.println(responseBuffer);
-        /*float h = dht.readHumidity();
-        // Read temperature as Celsius (the default)
-        float t = dht.readTemperature();
-        if (isnan(h) || isnan(t)) {
-          Serial.println("Failed to read from DHT sensor!");
-          return;
-        }
-
-        responseBuffer=String("");
-        responseBuffer+=t;
-        responseBuffer+=" *C ";
-        responseBuffer+=h;
-        responseBuffer+=" %";
-        responseBuffer.toCharArray(screenbuffer,16);
-        Wire.beginTransmission(4);
-        Wire.write("W\t0\t1\t");
-        Wire.write(screenbuffer);
-        Wire.endTransmission();
-        */
-        
-      }
-      else
-      {
-        //Serial.print("Failed to skip response headers: ");
-        //Serial.println(err);
-      }
-    }
-    else
-    {    
-      //Serial.print("Getting response failed: ");
-      //Serial.println(err);
-      //Serial1.println("D1");
-      Wire.beginTransmission(8);
-      Wire.write(0x01);
-      Wire.endTransmission();
-      delay(100);
-      Wire.beginTransmission(8);
-      Wire.write(0x10);
-      Wire.write("SpaceAPI Error!!");
-      Wire.endTransmission();
-      Wire.beginTransmission(8);
-      Wire.write(0x11);
-      Wire.write("HTTP error !!   ");
-      Wire.endTransmission();
-      
+    Serial.print("Got status code: ");
+    Serial.println(err);
+    if (err=HTTP_CODE_OK)
+    {      
+      int bodyLen = http.getSize();
+      Serial.print("Content length is: ");
+      Serial.println(bodyLen);
+      Serial.println();
+      String responseBuffer=http.getString();;
+      writeString(1,2,responseBuffer.substring(2,18).c_str(),constrain(responseBuffer.substring(2,18).length(),0,16));
     }
   }
   else
@@ -353,9 +148,10 @@ void loop() {
     Serial.print("Connect failed: ");
     Serial.println(err);
   }
-  http.stop();
-
+  http.end();
+  
   //Serial.println();
   //Serial.println("closing connection");
 }
+
 
